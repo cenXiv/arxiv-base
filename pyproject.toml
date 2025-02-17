@@ -16,7 +16,9 @@ include = [
    
 [tool.poetry.dependencies]
 python = "^3.11"
-pydantic = "==1.10.*"
+# pydantic = "==1.10.*"
+pydantic-settings = "*"
+pydantic = "^2.10.6"
 flask = "3.0.*"
 pytz = "*"
 wtforms = "*"

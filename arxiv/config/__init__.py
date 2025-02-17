@@ -5,7 +5,8 @@ import os
 from sqlalchemy.engine.interfaces import IsolationLevel
 from secrets import token_hex
 from urllib.parse import urlparse
-from pydantic import BaseSettings, SecretStr
+from pydantic_settings import BaseSettings
+from pydantic import SecretStr
 
 DEFAULT_DB = "sqlite:///tests/data/browse.db"
 DEFAULT_LATEXML_DB = "sqlite:///tests/data/latexml.db"
@@ -114,22 +115,22 @@ class Settings(BaseSettings):
     For details, see :mod:`arxiv.base.urls`.
     """
 
-    # In order to provide something close to the config_url behavior, this will
-    # look for ARXIV_{endpoint}_URL variables in the environ, and update `URLS`
-    # accordingly.
-    for key, value in os.environ.items():
-        if key.startswith("ARXIV_") and key.endswith("_URL"):
-            endpoint = "_".join(key.split("_")[1:-1]).lower()
-            o = urlparse(value)
-            if not o.netloc:  # Doesn't raise an exception.
-                continue
-            i: Optional[int]
-            try:
-                i = list(zip(*URLS))[0].index(endpoint)
-            except ValueError:
-                i = None
-            if i is not None:
-                URLS[i] = (endpoint, o.path, o.netloc)
+    # # In order to provide something close to the config_url behavior, this will
+    # # look for ARXIV_{endpoint}_URL variables in the environ, and update `URLS`
+    # # accordingly.
+    # for key, value in os.environ.items():
+    #     if key.startswith("ARXIV_") and key.endswith("_URL"):
+    #         endpoint = "_".join(key.split("_")[1:-1]).lower()
+    #         o = urlparse(value)
+    #         if not o.netloc:  # Doesn't raise an exception.
+    #             continue
+    #         i: Optional[int]
+    #         try:
+    #             i = list(zip(*URLS))[0].index(endpoint)
+    #         except ValueError:
+    #             i = None
+    #         if i is not None:
+    #             URLS[i] = (endpoint, o.path, o.netloc)
 
 
     ARXIV_BUSINESS_TZ: str = "US/Eastern"
